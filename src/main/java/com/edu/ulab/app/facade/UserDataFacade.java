@@ -59,14 +59,54 @@ public class UserDataFacade {
                 .build();
     }
 
-    public UserBookResponse updateUserWithBooks(UserBookRequest userBookRequest) {
-        return null;
+    public UserBookResponse updateUserWithBooks(UserBookRequest userBookRequest, Long userId) {
+        UserDto userDto = userMapper.userRequestToUserDto(userBookRequest.getUserRequest());
+        userDto.setId(userId);
+        UserDto updatedUser = userService.updateUser(userDto);
+
+        List<Long> bookIdList;
+
+        if (userBookRequest.getBookRequests() != null) {
+            bookService.deleteBooksByUserId(userDto.getId());
+            bookIdList = userBookRequest.getBookRequests()
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .map(bookMapper::bookRequestToBookDto)
+                    .peek(bookDto -> bookDto.setUserId(userDto.getId()))
+                    .peek(mappedBookDto -> log.info("mapped book: {}", mappedBookDto))
+                    .map(bookService::createBook)
+                    .peek(createdBook -> log.info("Created book: {}", createdBook))
+                    .map(BookDto::getId)
+                    .toList();
+            log.info("Updated book ids: {}", bookIdList);
+        }
+
+        bookIdList = bookService.getBooksByUserId(userDto.getId())
+                .stream()
+                .map(BookDto::getId)
+                .toList();
+
+        return UserBookResponse.builder()
+                .userId(updatedUser.getId())
+                .booksIdList(bookIdList)
+                .build();
     }
 
     public UserBookResponse getUserWithBooks(Long userId) {
-        return null;
+        UserDto userDto = userService.getUserById(userId);
+        List<Long> bookIdList = bookService.getBooksByUserId(userId).stream()
+                .map(bookDto -> bookDto.getId())
+                .toList();
+
+        return  UserBookResponse.builder()
+                .userId(userDto.getId())
+                .booksIdList(bookIdList)
+                .build();
     }
 
     public void deleteUserWithBooks(Long userId) {
+        bookService.deleteBooksByUserId(userId);
+        userService.deleteUserById(userId);
+        log.info("Deleted user with ID={}", userId);
     }
 }
