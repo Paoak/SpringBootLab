@@ -20,7 +20,7 @@ import static com.edu.ulab.app.web.constant.WebConstant.RQID;
 @Slf4j
 @RestController
 @RequestMapping(value = WebConstant.VERSION_URL + "/user",
-        produces = MediaType.APPLICATION_JSON_VALUE)
+                produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     private final UserDataFacade userDataFacade;
 

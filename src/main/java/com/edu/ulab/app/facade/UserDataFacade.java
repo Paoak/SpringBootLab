@@ -37,7 +37,6 @@ public class UserDataFacade {
         log.info("Got user book create request: {}", userBookRequest);
         UserDto userDto = userMapper.userRequestToUserDto(userBookRequest.getUserRequest());
         log.info("Mapped user request: {}", userDto);
-
         UserDto createdUser = userService.createUser(userDto);
         log.info("Created user: {}", createdUser);
 

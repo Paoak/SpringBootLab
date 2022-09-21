@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BookEntity {
+public class BookEntity extends Entity {
     private Long id;
     private Long userId;
     private String title;
