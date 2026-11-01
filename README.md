@@ -1,7 +1,15 @@
 # SpringBootLab
  
 REST API на Spring Boot для управления пользователями и их книгами. Данные хранятся в памяти приложения
-(без базы данных).
+(без базы данных). Это первая часть серии из трёх учебных проектов.
+ 
+## Серия проектов
+ 
+| Часть | Что нового |
+|---|---|
+| **SpringBootLab** (этот репозиторий) | CRUD для пользователей и книг, хранилище в памяти, слои controller, facade, service, storage |
+| [SpringBootLab_2](https://github.com/Paoak/SpringBootLab_2) | хранение в базе данных (H2): реализации на JdbcTemplate и Spring Data JPA |
+| [SpringBootLab_3](https://github.com/Paoak/SpringBootLab_3) | PostgreSQL, Liquibase, JPA-связи между сущностями, юнит-тесты и тесты репозиториев (Testcontainers) |
  
 ## Что умеет
  
@@ -113,11 +121,11 @@ src/main/java/com/edu/ulab/app/
  
 Запрос проходит слои так: `UserController` → `UserDataFacade` → `UserService` / `BookService` → хранилище.
  
-## Ограничения и планы
+## Ограничения и что было дальше
  
 - Данные хранятся в `HashMap` и пропадают при перезапуске; хранилище не рассчитано на параллельные запросы.
 - Ошибка «не найдено» сейчас возвращается со статусом 400, а не 404. Для `NotValidException` отдельного обработчика
   пока нет, поэтому при невалидных данных Spring вернёт стандартную ошибку 500.
-- Автотестов в проекте пока нет. Планирую добавить тесты на JUnit 5 и `MockMvc` (создание, получение несуществующего
-  пользователя, невалидный запрос).
-- Следующий шаг: подключить PostgreSQL через Spring Data JPA.
+- В этой части автотестов нет. Работа с базой данных (H2, JdbcTemplate и Spring Data JPA) сделана в
+  [SpringBootLab_2](https://github.com/Paoak/SpringBootLab_2), а PostgreSQL, Liquibase и тесты на JUnit 5, Mockito и
+  Testcontainers — в [SpringBootLab_3](https://github.com/Paoak/SpringBootLab_3).
